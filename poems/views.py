@@ -4,6 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import FilterSet, CharFilter
 from django_filters import rest_framework as drf_filters
 from .models import Poem
+from rest_framework_api.permissions import IsOwnerOrReadOnly
 from .serializers import PoemSerializer
 
 
@@ -23,4 +24,5 @@ class PoemDetail(generics.RetrieveUpdateDestroyAPIView):
     Retrieve a poem, or update or delete it by id if you own it.
     """
     serializer_class = PoemSerializer
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Poem.objects.all().order_by('-created_at')
