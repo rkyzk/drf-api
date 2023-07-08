@@ -4,7 +4,7 @@ from .models import Like
 
 
 @admin.register(Like)
-class LikeAdmin(models.ModelAdmin):
+class LikeAdmin(admin.ModelAdmin):
     list_display = ('owner', 'poem', 'created_at')
     search_fields = ('owner', 'poem',)
     list_filter = ('owner', 'poem',)
