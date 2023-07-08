@@ -92,7 +92,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'corsheaders',
-    'profiles'
+    'profiles',
+    'poems'
 ]
 
 SITE_ID = 1
