@@ -53,7 +53,7 @@ JWT_AUTH_SAMESITE = 'None'
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER':
-        'drf_api.serializers.CurrentUserSerializer'
+        'rest_framework_api.serializers.CurrentUserSerializer'
 }
 
 # Quick-start development settings - unsuitable for production
@@ -67,7 +67,7 @@ DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = [
     '8000-rkyzk-drfapi-wi7vo0777d0.ws-us101.gitpod.io',
-    # os.environ.get('ALLOWED_HOST'),
+    os.environ.get('ALLOWED_HOST'),
     ]
 
 
