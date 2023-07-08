@@ -29,6 +29,7 @@ class PoemList(generics.ListCreateAPIView):
         'owner__profile': ['exact'],
         'published_at': ['date__gte', 'date__lte'],
         'category': ['exact'],
+        'published': ['exact']
     }
     search_fields = (
         'owner__profile_name',
@@ -39,6 +40,8 @@ class PoemList(generics.ListCreateAPIView):
         'likes_count',
         'comments_count',
         'likes__created_at',
+        'published_at',
+        'created_at',
     )
 
     def perform_create(self, serializer):
