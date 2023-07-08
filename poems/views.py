@@ -30,7 +30,6 @@ class PoemList(generics.ListCreateAPIView):
         'owner__profile': ['exact'],
         'published_at': ['date__gte', 'date__lte'],
         'category': ['exact'],
-        'likes_count': ['gte']
     }
     search_fields = (
         'owner__profile_name',

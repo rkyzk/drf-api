@@ -29,12 +29,11 @@ class PoemSerializer(serializers.ModelSerializer):
             return like.id if like else None
         return None
 
-
     class Meta:
         model = Poem
         fields = [
             'id', 'owner', 'is_owner', 'profile_id',
             'profile_image', 'profile_name', 'created_at', 'published_at',
-            'updated_at', 'title', 'content', 'category', 'published', 'featured_flag',
-            'like_id', 'likes_count', 'comments_count',
+            'updated_at', 'title', 'content', 'category', 'published',
+            'featured_flag', 'like_id', 'likes_count', 'comments_count',
         ]
