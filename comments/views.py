@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_api.permissions import IsOwnerOrReadOnly
 from .models import Comment
@@ -12,6 +12,16 @@ class CommentList(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Comment.objects.all()
+    filter_backends = [
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = {
+        'poem__id': ['exact'],
+    }
+    ordering_fields = (
+        'created_at',
+    )
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
