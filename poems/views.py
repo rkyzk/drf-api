@@ -1,9 +1,8 @@
 
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
-from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import FilterSet, CharFilter
-from django_filters import rest_framework as drf_filters
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from django_filters import rest_framework as drf_filters, CharFilter
 from rest_framework_api.permissions import IsOwnerOrReadOnly
 from .models import Poem
 from .serializers import PoemSerializer
@@ -24,6 +23,7 @@ class PoemList(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
+    filter_class = PoemFilter
     filterset_fields = {
         'owner__followed__owner__profile': ['exact'],
         'likes__owner__profile': ['exact'],
