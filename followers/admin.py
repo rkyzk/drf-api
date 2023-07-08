@@ -4,7 +4,7 @@ from .models import Follower
 
 
 @admin.register(Follower)
-class AdminFollower(admin.ModelAdmin):
+class FollowerAdmin(admin.ModelAdmin):
     list_display = ['owner', 'followed', 'created_at']
     search_fields = ['owner', 'followed']
     list_filter = ['owner', 'followed']
