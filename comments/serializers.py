@@ -1,7 +1,7 @@
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
 from .models import Comment
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     def get_created_at(self, obj):
-        if obj.created_at > datetime.utcnow() - timedelta(days=7):
+        if obj.created_at.date() > datetime.now().date() - timedelta(days=7):
             return naturaltime(obj.created_at)
         return obj.created_at
 
