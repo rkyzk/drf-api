@@ -4,7 +4,7 @@ from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import FilterSet, CharFilter
 from django_filters import rest_framework as drf_filters
-from drf_api.permissions import IsOwnerOrReadOnly
+from rest_framework_api.permissions import IsOwnerOrReadOnly
 from .models import Poem
 from .serializers import PoemSerializer
 
