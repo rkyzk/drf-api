@@ -26,6 +26,7 @@ class ProfileList(generics.ListAPIView):
         'owner__followed__owner__profile',
         'featured_flag'
     ]
+    search_fields = ('display_name',)
     ordering_fields = [
         'poems_count',
         'followers_count',

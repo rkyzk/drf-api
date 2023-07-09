@@ -9,9 +9,10 @@ class PoemSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
-    profile_name = serializers.ReadOnlyField(source='owner.profile.display_name')
+    profile_name = serializers.ReadOnlyField(
+        source='owner.profile.display_name')
     featured_flag = serializers.ReadOnlyField()
-    published_at = serializers.ReadOnlyField()
+    published_at = serializers.SerializerMethodField()
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.ReadOnlyField()
     comments_count = serializers.ReadOnlyField()
@@ -28,6 +29,11 @@ class PoemSerializer(serializers.ModelSerializer):
             ).first()
             return like.id if like else None
         return None
+
+    def get_published_at(self, obj):
+        if obj.published_at:
+            return obj.published_at.strftime("%d %b %Y")
+        return null
 
     class Meta:
         model = Poem
