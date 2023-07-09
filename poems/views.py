@@ -27,14 +27,15 @@ class PoemList(generics.ListCreateAPIView):
         'owner__followed__owner__profile': ['exact'],
         'likes__owner__profile': ['exact'],
         'owner__profile': ['exact'],
+        'owner__profile__display_name': ['icontains'],
+        'title': ['icontains'],
         'published_at': ['date__gte', 'date__lte'],
         'category': ['exact'],
         'published': ['exact']
     }
     search_fields = (
-        'owner__profile_name',
         'title',
-        'created_at'
+        'content',
     )
     ordering_fields = (
         'likes_count',
