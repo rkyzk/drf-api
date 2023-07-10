@@ -33,7 +33,7 @@ class PoemSerializer(serializers.ModelSerializer):
     def get_published_at(self, obj):
         if obj.published_at:
             return obj.published_at.strftime("%d %b %Y")
-        return null
+        return obj.published_at
 
     class Meta:
         model = Poem
