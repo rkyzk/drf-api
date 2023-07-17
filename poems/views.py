@@ -31,7 +31,8 @@ class PoemList(generics.ListCreateAPIView):
         'title': ['icontains'],
         'published_at': ['date__gte', 'date__lte'],
         'category': ['exact'],
-        'published': ['exact']
+        'published': ['exact'],
+        'featured_flag': ['exact']
     }
     search_fields = (
         'title',

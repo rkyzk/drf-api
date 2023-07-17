@@ -23,6 +23,21 @@ class ProfileSerializer(serializers.ModelSerializer):
             return following.id if following else None
         return None
 
+    def validate_image(self, value):
+        if value.size > 800 * 1024:
+            raise serializers.ValidationError(
+                "File larger than 800KB can't be uploaded."
+            )
+        if value.image.height > 1000:
+            raise serializers.ValidationError(
+                "Image with height over 1000px can't be uploaded."
+            )
+        if value.image.width > 1000:
+            raise serializers.ValidationError(
+                "Image with width over 1000px can't be uploaded."
+            )
+        return value
+
     class Meta:
         model = Profile
         fields = [
