@@ -1,3 +1,5 @@
+"""This module holds views for listing/creating Poem objects
+and for editing/deleting Poem objects."""
 
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
@@ -47,7 +49,8 @@ class PoemList(generics.ListCreateAPIView):
     )
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)          
+        """Set current user as the owner of the poem."""
+        serializer.save(owner=self.request.user)  
 
 
 class PoemDetail(generics.RetrieveUpdateDestroyAPIView):

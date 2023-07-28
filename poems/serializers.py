@@ -1,3 +1,5 @@
+"""This module holds serailizer class for Poem model."""
+
 from rest_framework import serializers
 from poems.models import Poem
 from likes.models import Like
@@ -5,6 +7,7 @@ from datetime import datetime
 
 
 class PoemSerializer(serializers.ModelSerializer):
+    """Add and modify 10 fields"""
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
@@ -18,10 +21,20 @@ class PoemSerializer(serializers.ModelSerializer):
     comments_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
+        """
+        Return if the poem is owned by the current user.
+        :return: true/false
+        :rtype: boolean
+        """
         request = self.context['request']
         return request.user == obj.owner
 
     def get_like_id(self, obj):
+        """
+        Return like_id or None if no like_id.
+        :return: id or None
+        :rtype: int
+        """
         user = self.context['request'].user
         if user.is_authenticated:
             like = Like.objects.filter(
@@ -31,11 +44,15 @@ class PoemSerializer(serializers.ModelSerializer):
         return None
 
     def get_published_at(self, obj):
+        """
+        If published, retunr time in 'dd month(spelled out) YYYY' format
+        """
         if obj.published_at:
             return obj.published_at.strftime("%d %b %Y")
         return obj.published_at
 
     class Meta:
+        """Define which fields will be accessible."""
         model = Poem
         fields = [
             'id', 'owner', 'is_owner', 'profile_id',
