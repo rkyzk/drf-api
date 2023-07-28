@@ -55,7 +55,7 @@ class PoemList(generics.ListCreateAPIView):
 
 class PoemDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Retrieve a poem, or update or delete it by id if you own it.
+    Retrieve a poem, or update or delete it by id if the current user owns it.
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = PoemSerializer

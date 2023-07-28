@@ -1,3 +1,6 @@
+"""This module holds views for listing Profile objects
+and for editing Profile objects."""
+
 from django.db.models import Count
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -39,7 +42,7 @@ class ProfileList(generics.ListAPIView):
 
 class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
-    Retrieve or update a profile if you're the owner.
+    Retrieve or update a profile if the current user is the owner.
     """
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Profile.objects.annotate(
