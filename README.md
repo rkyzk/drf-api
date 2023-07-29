@@ -1,108 +1,88 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Django Rest Framework API for your-poetry project
 
-Welcome rkyzk,
+## General Introduction
+This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
+## Contents
+[Overview](## Overview)
+[Main-Technologies-Used](## Main Technologies used)
+[Features-in-Detail](## Main Technologies used)
+[Manual-Testing](## Manual Testing)
+[Credits]
+[Deployment Procedures]
+ 
+## Overview
+This API involves following applications:
+1. poems
+2. profiles
+3. comments
+4. likes
+5. followers
 
-You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **September 1, 2021**
+### 1. poems
+- Poem model stores information of poem objects including title, content and created, published & updated dates etc.
+- The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
+- The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
 
-## Gitpod Reminders
+## Main Technologies
+Django Rest Framework
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+## Manual Testing
 
-`python3 -m http.server`
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|message at root | go to "https://poetry-6c31c94e3988.herokuapp.com" | Check the displayed information | message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass||2023/4/30|
 
-A blue button should appear to click: _Make Public_,
+### Profiles
 
-Another blue button should appear to click: _Open Browser_.
+|1|A profile is automatically made for a new user. | go to admin panel, add user (username: 'user1' password: 
+'swUf8LcR'.) | Go to "/profiles" and check if User object 'user1' is created. | 'user1' is created. |'user1' is created.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
+|2|'sunset.jpg' is set as default profile image. |--| Go to "/profiles" and check if the value of 'image' for user1 is "https://res.cloudinary.com/ds66fig3o/image/upload/v1/media/../sunset.jpg". | The correct URL is set for 'image' field. |The correct URL is set for 'image' field.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
+|3|profile edit if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
+|4|profile image can be updated. || Go to "/profiles/1" and upload 'test-profile.jpg' Click 'PUT.' |The image URL is updated and contains 'test-profile'. |The image URL is updated. The URL shows 'test-profile.jpg'. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/4-2.png)|2023/7/29|
+|5|Profile can't be updated by other users |Log out and log in as user1| Go to "/profiles/1" |The edit form is absent. |The edit form is absent. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/5.png)|2023/7/29|
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
+### Poems
 
-A blue button should appear to click: _Make Public_,
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|Can't create poems if not logged in. | Log out. | Check if the form is displayed. | The form is absent. |The form is absent.| pass|[image](./images/manual-tests/DRF-poems/1.png)|2023/7/29|
+|2|Can create poems if logged in. | Log in as user1. | Enter title: title; content: content; category: other; publish: false; and click 'post.' | The new poem 'title' is created.|The new poem 'title' is created.| pass|[image](./images/manual-tests/DRF-poems/2.png)|2023/7/29|
+|3|Can update poems |Go to "/poems/7"| Enter title: title updated; content: content updated; category: nature; publish: true; and click 'PUT.' | The poem data is updated.|The poem data is updated.| pass|[image](./images/manual-tests/DRF-poems/3.png)|2023/7/29|
+|4|Other users cannot update poems. |Log in as admin and go to "/poems/7"| Check if the edit form is absent | The edit form is absent.|The edit form is absent.| pass|[image](./images/manual-tests/DRF-poems/4.png)|2023/7/29|
+|5|Owners can delete their own poems. |Log in as user1 and go to "/poems/7"| Click 'Delete' and go to "/poems/7" | The poem will not be found.|A note indicates 404 error, and that the poem is 'not found.'| pass|[image](./images/manual-tests/DRF-poems/5.png)|2023/7/29|
 
-Another blue button should appear to click: _Open Browser_.
+### Comments
+- log in as user1 and make a poem (title: poem 1; content: content; category: 'other'; publish: true)
 
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|Can create comments | Log in as admin | Select 'poem 1' and enter 'hello' for content.  Click 'Post.'|Comment 'hello' is created. |Comment 'hello' is created. | pass|[image](./images/manual-tests/DRF-comments/1.png)|2023/7/29|
+|2|Can edit comments |--| Update as follows: content: 'hello updated'; Click 'Put.'|Comment is updated. |Comment is updated. | pass|[image](./images/manual-tests/DRF-comments/2.png)|2023/7/29|
+|3|can't update comments if logged out |Log out. Go to "/comments/9"| Check if the edit form is present.|The edit form is absent. |The edit form is absent. | pass|[image](./images/manual-tests/DRF-comments/3.png)|2023/7/29|
+|4|Other members can't update comments. |Log in as admin. Go to "/comments/| Check if the edit form is present.|The edit form is absent. |The edit form is absent. | pass|[image](./images/manual-tests/DRF-comments/4.png)|2023/7/29|
 
-To log into the Heroku toolbelt CLI:
+### Likes
 
-1. Log in to your Heroku account and go to *Account Settings* in the menu under your avatar.
-2. Scroll down to the *API Key* and click *Reveal*
-3. Copy the key
-4. In Gitpod, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|Can't like poems if not logged in. | Log out. Go to "/poems." |Check if the form is displayed. |The form is 
+absent. |The form is absent. | pass|[image](./images/manual-tests/DRF-likes/1.png)|2023/7/29|
+|2|Can like poems if logged in. | Log in as admin. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is made.|Like object with values owner: admin; poem: 8 (id of 'poem 1') is made. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
+|3|Can't like the same poem twice |--|Select 'poem 1' and click 'POST' |Error will be raised.|Error "possible duplicated" is raised (400 Bad request) |pass|[image](./images/manual-tests/DRF-likes/3.png)|2023/7/29|
+|4|Can like one's own poems | Log in as user1. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is created.|Like object with values owner: user1; poem: 8 (id of 'poem 1') is created. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
 
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
+### Followers
 
-------
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|Can't follow users if not logged in. | Log out. Go to "/followers" |Check if the form is displayed. |The form is absent. |The form is absent. | pass|[image](./images/manual-tests/DRF-followers/1.png)|2023/7/29|
+|2|Can follow users if logged in. | Log in as admin. Go to "/followers" |Select 'user1' and click 'POST' |Follow object is made.|Follow object with values owner: admin; followed_name: user1 is made. | pass|[image](./images/manual-tests/DRF-followers/2.png)|2023/7/29|
+|3|Can't follow the same user twice |--|Select 'user1' and click 'POST' |Error will be raised.|Error "possible duplicated" is raised (400 Bad request) |pass|[image](./images/manual-tests/DRF-followers/4.png)|2023/7/29|
+|4|Can follow onself |--|Select 'admin' and click 'POST' |A new Follower object is made.|Follower object with values owner: admin and followed_name: admin is created. |pass|[image](./images/manual-tests/DRF-followers/4.png)|2023/7/29|
 
-## Release History
+### Check some fields in profiles
 
-We continually tweak and adjust this template to help give you the best experience. Here is the version history:
 
-**September 1 2021:** Remove `PGHOSTADDR` environment variable.
+|1|message at root | go to "https://poetry-6c31c94e3988.herokuapp.com" | Check the displayed information | message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass|[image](./images/manual-tests/DRF-lieks/2.png)|2023/4/30|
 
-**July 19 2021:** Remove `font_fix` script now that the terminal font issue is fixed.
-
-**July 2 2021:** Remove extensions that are not available in Open VSX.
-
-**June 30 2021:** Combined the P4 and P5 templates into one file, added the uptime script. See the FAQ at the end of this file.
-
-**June 10 2021:** Added: `font_fix` script and alias to fix the Terminal font issue
-
-**May 10 2021:** Added `heroku_config` script to allow Heroku API key to be stored as an environment variable.
-
-**April 7 2021:** Upgraded the template for VS Code instead of Theia.
-
-**October 21 2020:** Versions of the HTMLHint, Prettier, Bootstrap4 CDN and Auto Close extensions updated. The Python extension needs to stay the same version for now.
-
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
-
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
-
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
-
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
-
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
-
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
-
-------
-
-## FAQ about the uptime script
-
-**Why have you added this script?**
-
-It will help us to calculate how many running workspaces there are at any one time, which greatly helps us with cost and capacity planning. It will help us decide on the future direction of our cloud-based IDE strategy.
-
-**How will this affect me?**
-
-For everyday usage of Gitpod, it doesn’t have any effect at all. The script only captures the following data:
-
-- An ID that is randomly generated each time the workspace is started.
-- The current date and time
-- The workspace status of “started” or “running”, which is sent every 5 minutes.
-
-It is not possible for us or anyone else to trace the random ID back to an individual, and no personal data is being captured. It will not slow down the workspace or affect your work.
-
-**So….?**
-
-We want to tell you this so that we are being completely transparent about the data we collect and what we do with it.
-
-**Can I opt out?**
-
-Yes, you can. Since no personally identifiable information is being captured, we'd appreciate it if you let the script run; however if you are unhappy with the idea, simply run the following commands from the terminal window after creating the workspace, and this will remove the uptime script:
-
-```
-pkill uptime.sh
-rm .vscode/uptime.sh
-```
-
-**Anything more?**
-
-Yes! We'd strongly encourage you to look at the source code of the `uptime.sh` file so that you know what it's doing. As future software developers, it will be great practice to see how these shell scripts work.
-
----
-
-Happy coding!
