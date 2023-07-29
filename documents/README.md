@@ -31,7 +31,7 @@ Django Rest Framework
 
 Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
-|1|message at root | go to "https://poetry-6c31c94e3988.herokuapp.com" | Check the displayed information | message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass||2023/4/30|
+|1|message at root | Go to root URL "https://8000-rkyzk-drfapi-wi7vo0777d0.ws-us102.gitpod.io" | Check the displayed information | Message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass|[image](./images/manual-tests/DRF/1.png)|2023/4/30|
 
 ### Profiles
 
