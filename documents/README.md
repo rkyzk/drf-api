@@ -1,25 +1,16 @@
 # Django Rest Framework API for your-poetry project
 
-## General Introduction
+## Contents 
+* [Overview](#overview)
+* [Main Technologies Used](#main-technologies-used)
+* [Features](#features-in-nutshell)
+* [Manual Testing](#manual-testing)
+* [Deployment Procedure](#deployment-procedure)
+
+## Overview
 This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
 
-## Contents
-[Overview](## Overview)
-[Main-Technologies-Used](## Main Technologies used)
-[Features-in-Detail](## Main Technologies used)
-[Manual-Testing](## Manual Testing)
-[Credits]
-[Deployment Procedures]
- 
-## Overview
-This API involves following applications:
-1. poems
-2. profiles
-3. comments
-4. likes
-5. followers
-
-### 1. poems
+### Features
 - Poem model stores information of poem objects including title, content and created, published & updated dates etc.
 - The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
 - The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
@@ -35,7 +26,9 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 
 ### Profiles
 
-|1|A profile is automatically made for a new user. | go to admin panel, add user (username: 'user1' password: 
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|A profile is automatically made for a new user. | Go to admin panel, add user (username: 'user1' password: 
 'swUf8LcR'.) | Go to "/profiles" and check if User object 'user1' is created. | 'user1' is created. |'user1' is created.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |2|'sunset.jpg' is set as default profile image. |--| Go to "/profiles" and check if the value of 'image' for user1 is "https://res.cloudinary.com/ds66fig3o/image/upload/v1/media/../sunset.jpg". | The correct URL is set for 'image' field. |The correct URL is set for 'image' field.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |3|profile edit if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
@@ -67,8 +60,7 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 
 Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
-|1|Can't like poems if not logged in. | Log out. Go to "/poems." |Check if the form is displayed. |The form is 
-absent. |The form is absent. | pass|[image](./images/manual-tests/DRF-likes/1.png)|2023/7/29|
+|1|Can't like poems if not logged in. | Log out. Go to "/poems." |Check if the form is displayed.|The form is absent. |The form is absent. | pass|[image](./images/manual-tests/DRF-likes/1.png)|2023/7/29|
 |2|Can like poems if logged in. | Log in as admin. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is made.|Like object with values owner: admin; poem: 8 (id of 'poem 1') is made. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
 |3|Can't like the same poem twice |--|Select 'poem 1' and click 'POST' |Error will be raised.|Error "possible duplicated" is raised (400 Bad request) |pass|[image](./images/manual-tests/DRF-likes/3.png)|2023/7/29|
 |4|Can like one's own poems | Log in as user1. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is created.|Like object with values owner: user1; poem: 8 (id of 'poem 1') is created. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
@@ -92,15 +84,15 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |2|following_id | Log in as admin and go to "/profiles"|Check the following ids for user1 and for admin. |The following id for user1 is present and following id for admin is null. |The following id for user1 is 3. The following id for admin is null.| pass|[image](./images/manual-tests/DRF-profiles2/2.png)|2023/7/29|
 |3| followers_id is null if logged out. | Log out. Go to "/profiles" |Check the following ids for user1 and for admin. |Both following ids are null. |Both following ids are null.| pass|[image](./images/manual-tests/DRF-profiles2/3.png)|2023/7/29|
 
-### Check updated fields in likes
+### Check updated fields in poems
 - Log in as admin, go to "/comments" and make a comment with content "hello 2" for poem 1.
 
 Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
-|1|like_counts | Log out. Go to "/poems/8" |Check the likes count | The likes count is 1. |The likes count is 1.| pass|[image](./images/manual-tests/DRF-poem2/1-3.png)|2023/7/29|
-|2|comments_counts | -- |Check the comments count | The comments count is 1. |The comments count is 1.| pass|[image](./images/manual-tests/DRF-poem2/1-3.png)|2023/7/29|
-|3|like_id is null if logged out|--|Check the like id of 'poem 8'. |The like id is null. |The like id is null.| pass|[image](./images/manual-tests/DRF-profiles2/1-3.png)|2023/7/29|
-|4| like id is present if the user has liked the poem. | Log in as admin. Go to "/poems/8" |Check the like id | like_id has a value. |like id is 2.| pass|[image](./images/manual-tests/DRF-profiles2/4.png)|2023/7/29|
-|5| like id is null if the user hasn't liked or has unliked the poem. | Log in as user1. Go to "/poems/8" |Check the like id | like_id is null. |like id is null.| pass|[image](./images/manual-tests/DRF-profiles2/5.png)|2023/7/29|
+|1|like_counts | Log out. Go to "/poems/8" |Check the likes count | The likes count is 1. |The likes count is 1.| pass|[image](./images/manual-tests/DRF-poems2/1-3.png)|2023/7/29|
+|2|comments_counts | -- |Check the comments count | The comments count is 1. |The comments count is 1.| pass|[image](./images/manual-tests/DRF-poems2/1-3.png)|2023/7/29|
+|3|like_id is null if logged out|--|Check the like id of 'poem 8'. |The like id is null. |The like id is null.| pass|[image](./images/manual-tests/DRF-poems2/1-3.png)|2023/7/29|
+|4| like id is present if the user has liked the poem. | Log in as admin. Go to "/poems/8" |Check the like id | like_id has a value. |like id is 2.| pass|[image](./images/manual-tests/DRF-poems2/4.png)|2023/7/29|
+|5| like id is null if the user hasn't liked or has unliked the poem. | Log in as user1. Go to "/poems/8" |Check the like id | like_id is null. |like id is null.| pass|[image](./images/manual-tests/DRF-poems2/5.png)|2023/7/29|
 
-
+## Deployment Procedure
