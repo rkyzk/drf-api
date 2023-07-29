@@ -61,6 +61,7 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |2|Can edit comments |--| Update as follows: content: 'hello updated'; Click 'Put.'|Comment is updated. |Comment is updated. | pass|[image](./images/manual-tests/DRF-comments/2.png)|2023/7/29|
 |3|can't update comments if logged out |Log out. Go to "/comments/9"| Check if the edit form is present.|The edit form is absent. |The edit form is absent. | pass|[image](./images/manual-tests/DRF-comments/3.png)|2023/7/29|
 |4|Other members can't update comments. |Log in as admin. Go to "/comments/| Check if the edit form is present.|The edit form is absent. |The edit form is absent. | pass|[image](./images/manual-tests/DRF-comments/4.png)|2023/7/29|
+|5|Can delete one's own comments |log in as admin and go to "/comments/10 |Click 'Delete'|Comment is deleted. |Comment is deleted. | pass|[image](./images/manual-tests/DRF-comments/5.png)|2023/7/29|
 
 ### Likes
 
@@ -71,6 +72,7 @@ absent. |The form is absent. | pass|[image](./images/manual-tests/DRF-likes/1.pn
 |2|Can like poems if logged in. | Log in as admin. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is made.|Like object with values owner: admin; poem: 8 (id of 'poem 1') is made. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
 |3|Can't like the same poem twice |--|Select 'poem 1' and click 'POST' |Error will be raised.|Error "possible duplicated" is raised (400 Bad request) |pass|[image](./images/manual-tests/DRF-likes/3.png)|2023/7/29|
 |4|Can like one's own poems | Log in as user1. Go to "/likes" |Select 'poem 1' and click 'POST' |Like object is created.|Like object with values owner: user1; poem: 8 (id of 'poem 1') is created. | pass|[image](./images/manual-tests/DRF-likes/2.png)|2023/7/29|
+|5|Can delete own like objects | Log in as user1. Go to "/likes/4" (owner: user1; poem: 8)|Click 'Delete' |Like object is deleted.|Like object is deleted. | pass|[image](./images/manual-tests/DRF-likes/5.png)|2023/7/29|
 
 ### Followers
 
@@ -80,9 +82,25 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |2|Can follow users if logged in. | Log in as admin. Go to "/followers" |Select 'user1' and click 'POST' |Follow object is made.|Follow object with values owner: admin; followed_name: user1 is made. | pass|[image](./images/manual-tests/DRF-followers/2.png)|2023/7/29|
 |3|Can't follow the same user twice |--|Select 'user1' and click 'POST' |Error will be raised.|Error "possible duplicated" is raised (400 Bad request) |pass|[image](./images/manual-tests/DRF-followers/4.png)|2023/7/29|
 |4|Can follow onself |--|Select 'admin' and click 'POST' |A new Follower object is made.|Follower object with values owner: admin and followed_name: admin is created. |pass|[image](./images/manual-tests/DRF-followers/4.png)|2023/7/29|
+|5|Can delete one's own Follower object |--|Go to "/followers/4" (owner: admin; followed_name: admin) and click "Delete." |The Follower object is deleted.|The Follower object is deleted. |pass|[image](./images/manual-tests/DRF-followers/5.png)|2023/7/29|
 
-### Check some fields in profiles
+### Check updated fields in profiles
 
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|followers_counts. | Log out. Go to "/profiles" |Check if followers count for user1 and admin are 1. |The followers counts for user1 and admin are 1. |The followers counts for user1 and admin are 1.| pass|[image](./images/manual-tests/DRF-profiles2/1.png)|2023/7/29|
+|2|following_id | Log in as admin and go to "/profiles"|Check the following ids for user1 and for admin. |The following id for user1 is present and following id for admin is null. |The following id for user1 is 3. The following id for admin is null.| pass|[image](./images/manual-tests/DRF-profiles2/2.png)|2023/7/29|
+|3| followers_id is null if logged out. | Log out. Go to "/profiles" |Check the following ids for user1 and for admin. |Both following ids are null. |Both following ids are null.| pass|[image](./images/manual-tests/DRF-profiles2/3.png)|2023/7/29|
 
-|1|message at root | go to "https://poetry-6c31c94e3988.herokuapp.com" | Check the displayed information | message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass|[image](./images/manual-tests/DRF-lieks/2.png)|2023/4/30|
+### Check updated fields in likes
+- Log in as admin, go to "/comments" and make a comment with content "hello 2" for poem 1.
+
+Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
+|:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
+|1|like_counts | Log out. Go to "/poems/8" |Check the likes count | The likes count is 1. |The likes count is 1.| pass|[image](./images/manual-tests/DRF-poem2/1-3.png)|2023/7/29|
+|2|comments_counts | -- |Check the comments count | The comments count is 1. |The comments count is 1.| pass|[image](./images/manual-tests/DRF-poem2/1-3.png)|2023/7/29|
+|3|like_id is null if logged out|--|Check the like id of 'poem 8'. |The like id is null. |The like id is null.| pass|[image](./images/manual-tests/DRF-profiles2/1-3.png)|2023/7/29|
+|4| like id is present if the user has liked the poem. | Log in as admin. Go to "/poems/8" |Check the like id | like_id has a value. |like id is 2.| pass|[image](./images/manual-tests/DRF-profiles2/4.png)|2023/7/29|
+|5| like id is null if the user hasn't liked or has unliked the poem. | Log in as user1. Go to "/poems/8" |Check the like id | like_id is null. |like id is null.| pass|[image](./images/manual-tests/DRF-profiles2/5.png)|2023/7/29|
+
 
