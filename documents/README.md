@@ -5,7 +5,7 @@
 * [Main Technologies Used](#main-technologies-used)
 * [Features](#features-in-nutshell)
 * [Manual Testing](#manual-testing)
-* [Deployment Procedure](#deployment-procedure)
+* [Deployment Process](#deployment-process)
 
 ## Overview
 This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
@@ -28,8 +28,7 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 
 Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
-|1|A profile is automatically made for a new user. | Go to admin panel, add user (username: 'user1' password: 
-'swUf8LcR'.) | Go to "/profiles" and check if User object 'user1' is created. | 'user1' is created. |'user1' is created.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
+|1|A profile is automatically made for a new user.|Go to admin panel, add user (username:'user1' password: 'swUf8LcR'.)|Go to "/profiles" and check if User object 'user1' is created. |'user1' is created.|'user1' is created.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |2|'sunset.jpg' is set as default profile image. |--| Go to "/profiles" and check if the value of 'image' for user1 is "https://res.cloudinary.com/ds66fig3o/image/upload/v1/media/../sunset.jpg". | The correct URL is set for 'image' field. |The correct URL is set for 'image' field.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |3|profile edit if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
 |4|profile image can be updated. || Go to "/profiles/1" and upload 'test-profile.jpg' Click 'PUT.' |The image URL is updated and contains 'test-profile'. |The image URL is updated. The URL shows 'test-profile.jpg'. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/4-2.png)|2023/7/29|
@@ -95,4 +94,54 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |4| like id is present if the user has liked the poem. | Log in as admin. Go to "/poems/8" |Check the like id | like_id has a value. |like id is 2.| pass|[image](./images/manual-tests/DRF-poems2/4.png)|2023/7/29|
 |5| like id is null if the user hasn't liked or has unliked the poem. | Log in as user1. Go to "/poems/8" |Check the like id | like_id is null. |like id is null.| pass|[image](./images/manual-tests/DRF-poems2/5.png)|2023/7/29|
 
-## Deployment Procedure
+## Deployment Process
+
+1.	Create a database (I used ElephantSQL.)
+2.	Log in at Heroku, click ‘New’ > ‘Create new app’
+3.	Name the app, select the region and click ‘Create app.’
+4.	Open the Settings tab.  Add a Config Var DATABASE_URL and enter the database URL without quotation marks.
+5.	At the terminal, install dj_database_url==0.5.0 psycopg2
+6.	In settings.py underneath the line ‘import os,’ add import dj_database_url<br>
+`import os`<br>
+`import dj_database_url`
+
+7.	update the DATABASES section to the following:<br>
+![image](./images/readme/deployment-1.png)
+
+8. In env.py write:
+`os.environ[‘DATABASE_URL’] = “write in database url”`
+
+9.	In order to check if the database is connected, temporarily comment out os.environ[‘DEV’] = 1 in env.py and add print(‘connected’) at the end of the else statement above.  In the terminal run makemigrations - -dry-run and check if ‘connected’ will be printed in the console.
+10.	If connected, run migrate command and create a superuser
+11.	On the ElephantSQL page for the database, select ‘BROWSER’ in the navigation on the left column.  Click the Table queries button, select ‘auth_user’ and click ‘Execute.’  Check if the superuser has been created. (This confirms the tables are created in the database.)
+12.	In the terminal install gunicorn django-cors-headers and update requirements.txt
+13.	Make Procfile and write these two lines:<br>
+`release: python manage.py makemigrations && python manage.py migrate`<br>
+`web: gunicorn drf_api.wsgi`
+14.	In settings.py update the allowed hosts values to include the url of the Heroku app:<br>
+`ALLOWED_HOSTS = ['localhost', '<your_app_name>.herokuapp.com']`
+15.	In the installed apps section, add ‘corsheaders’ below ‘dj_rest_auth.registration’<br>
+16.	Add corsheaders middleware to the TOP of the MIDDLEWARE
+`'corsheaders.middleware.CorsMiddleware',`
+17.	Under the MIDDLEWARE list, set the ALLOWED_ORIGINS for the network requests made to the server with the following code:
+![image](./images/readme/2.png)
+18.	In order to enable sending cookies in cross-origin requests so that users can get authentication functionality, add the follwoing:<br>
+`CORS_ALLOW_CREDENTIALS = True`
+19.	To be able to have the front end app and the API deployed to different platforms, set the JWT_AUTH_SAMESITE attribute to 'None'. (Without this the cookies would be blocked.)
+![image](./images/readme/3.png)
+20. Remove the value for SECRET_KEY and replace with the following code to use an environment variable instead.<br>
+`SECRET_KEY = os.environ.get('SECRET_KEY')`
+21.	Set a NEW value for the SECRET_KEY environment variable in env.py.<br>
+`os.environ.setdefault("SECRET_KEY", "CreateANEWRandomValueHere")`
+22.	In settings.py add the URL of the Heroku app to allowed hosts.<br>
+`ALLOWED_HOSTS = [ os.environ.get('ALLOWED_HOST'),]`
+23.	Comment again the environment variable ‘DEV’ in env.py
+24.	Run pip freeze –local > requirements.txt command to confirm the requirements.txt is up to date.
+25.	Add, commit and push to Github.
+26.	On Heroku dashboard on the Settings tab, make following Config Var:
+- SECRET_KEY and CLOURDINARY_URL (with no quotation marks)
+- DISABLE_COLLECTSTATIC = 1
+- ALLOWED_HOST (enter the URL of the Heroku app)
+27.	Open the Deploy tab, select connect to Github.  Search for the repository and click ‘Connect.’
+28.	Click ‘Deploy’ at the bottom of the page.
+29.	If message ‘Your app was successfully deployed’ appears, click “View.”
