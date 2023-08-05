@@ -1,4 +1,4 @@
-# Django Rest Framework API for your-poetry project
+# Django Rest Framework API for 'Your Poetry' project
 
 ## Contents 
 * [Overview](#overview)
@@ -10,7 +10,7 @@
 
 ## Overview
 This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
-The API contains apps that handle data about poems, users, user profiles, comments on the poems, which users liked which poems (likes app) as well as which users follows which users (followers app.)
+The API contains apps that handle data about poems, user profiles, comments on the poems as well as which users liked which poems (likes app) and which users follows which users (followers app.)
 
 ## Main Technologies
 Django Rest Framework
@@ -19,32 +19,34 @@ Django Rest Framework
 This API contains the following six apps. 
 
 1. poems<br>
-- Logged in users can enter the poem's title, content (required fields) and select a category (‘other’ by default),and the data will be handled by poems app.
+- Logged in users can create a poem by entering the title, content (required fields) and select a category (‘other’ by default), and the data will be handled by poems app.
 - The owner of the poem can edit or delete it.
 
 2. profiles<br>
-- A profile object will be automatically made when a user object is created.  This is done by def create_profile method in the models.py module.
-- Users can enter display name, an introduction about themselves, their favorite poems and poets and upload an image.
+- A profile object will be automatically created when a new user object is made.  This is done by def create_profile method in the models.py module.
+- Users can enter display name, an introduction about themselves (field 'about_me'), their favorite poems and poets (field 'favorites') and upload an image.
 
 3. comments<br>
 - Comments can be written, edited or deleted by logged in users.
-- Comment model has a foreign key poem which keeps track on which poem the comment has been written about.
-Only the owner of the comments can edit or delete the comments.
+- Comment model has a foreign key 'poem' which keeps track on which poem the comment has been written about.
+- Only the owner of the comments can edit or delete the comments.
 
 4. likes<br>
-- ‘Like’ object will be created whenever a user likes a poem. 
-- 'unique_together' defined in the Meta class in the Like model makes sure that a user can’t like the poem twice.
+- ‘Like’ object will be created when a user likes a poem. 
+- 'unique_together' defined in the Meta class in the Like model makes sure that a user can’t like the same poem twice.
 
 5. followers<br>
 - ‘Follower’ object will be created when a user follows a user.
 - 'unique_together' makes sure that a user can’t follow a user twice.
 
-**Other features**
-permissions class<br>
-- IsOwnerOrReadOnly will examine if the user is the owner of an object, and if so, returns true.  This prevents users other than the owner of the object from accessing the editing and deleting functionalities of the object.
+**Other features**<br>
+*permissions class*<br>
+- IsOwnerOrReadOnly will examine if the user is the owner of an object, and if so, returns true.  This will be used to programtaically prevent users other than the owner of the object from accessing the editing and deleting functionalities of the object.
 
-dj-rest-auth bug<br>
-Due to a bug in dj-rest-auth, users cannot log out.  The samesite attribute is set to “None” in settings.py, but this is not passed to the log out view.  As a solution to this bug, a method def logout_route is written in rest-framework_api/views.py.  This method sets both cookies to an empty string and pass additional attributes such as secure, httponly and samesite, which were left out by mistake by the library.
+*dj-rest-auth bug*<br>
+- Due to a bug in dj-rest-auth, users cannot log out.  The reason is that even though the samesite attribute is set to “None” in settings.py, this is not passed to the log out view.
+- As a solution to this bug, a method def logout_route is written in rest-framework_api/views.py (this was taken from the DRF walk through project at CI).  As explained in the lesson ‘dj-rest-auth bug fix’ at CI,
+this method sets both cookies to an empty string and pass additional attributes such as secure, httponly and samesite, which were left out by mistake by the library.
 
 ## Manual Testing
 
@@ -181,8 +183,12 @@ All errors were cleared.
 28.	Click ‘Deploy’ at the bottom of the page.
 29.	If message ‘Your app was successfully deployed’ appears, click “View.”
 
-add docstrings
-
-
 ### Credits:
-def logout_route in rest-framework_api/views.py 
+
+I leaned Django Rest Framework with the walk through project at CI, and I imitated many aspects of the project.<br>
+
+Specifically the following modules were taken from the walk through project with little or no modification. 
+- IsOwnerOrReadOnly class in permissions.py in rest_framework_api
+- CurrentUserSerializer class in serializers.py in rest_framework_api
+- def logout_route, def root_route in views.py in rest_framework_api
+- likes app and followers app
