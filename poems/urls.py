@@ -1,3 +1,5 @@
+"""This module holds URL patterns for the paths in the poems apps."""
+
 from django.urls import path
 from poems import views
 

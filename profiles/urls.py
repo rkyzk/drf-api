@@ -1,3 +1,5 @@
+"""This module holds URL patterns for the paths in the profiles apps."""
+
 from django.urls import path
 from profiles import views
 

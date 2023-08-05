@@ -1,9 +1,15 @@
+"""
+This module holds views for lougout route
+and root route.
+"""
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .settings import (
     JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
 )
+
 
 @api_view(['POST'])
 def logout_route(request):
@@ -32,6 +38,11 @@ def logout_route(request):
 
 @api_view()
 def root_route(request):
+    """
+    Return a message when user lands on the root URL.
+    :returns: object with key "message"
+    :rtype: Response
+    """
     return Response({
         "message": "Welcome to my drf API!"
     })

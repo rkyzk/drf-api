@@ -1,4 +1,4 @@
-"""This module holds classes to customize the admin panel."""
+"""This module holds a class to customize the admin panel."""
 
 from django.contrib import admin
 from django.db import models

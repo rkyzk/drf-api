@@ -1,3 +1,6 @@
+"""This module holds views for listing/creating Like objects
+and for deleting Like objects."""
+
 from rest_framework import generics, permissions
 from rest_framework_api.permissions import IsOwnerOrReadOnly
 from likes.models import Like

@@ -1,3 +1,6 @@
+"""This module holds views for listing/creating Follower objects
+and for deleting Follower objects."""
+
 from rest_framework import generics, permissions
 from rest_framework_api.permissions import IsOwnerOrReadOnly
 from .models import Follower
@@ -16,12 +19,16 @@ class FollowerList(generics.ListCreateAPIView):
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer):
+        """
+        When an object is created
+        Set the current user as the owner.
+        """
         serializer.save(owner=self.request.user)
 
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
     """
-    Retrieve a follower
+    Retrieve a follower.
     No Update view, as we either follow or unfollow users
     Destroy a follower, i.e. unfollow someone if owner
     """

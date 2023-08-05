@@ -5,18 +5,46 @@
 * [Main Technologies Used](#main-technologies-used)
 * [Features](#features-in-nutshell)
 * [Manual Testing](#manual-testing)
+* [Testing Code](#testing-code)
 * [Deployment Process](#deployment-process)
 
 ## Overview
 This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
-
-### Features
-- Poem model stores information of poem objects including title, content and created, published & updated dates etc.
-- The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
-- The owner field will be automatically assigned the value of the current user so the person who creates the object doesn't need to enter their own name.
+The API contains apps that handle data about poems, users, user profiles, comments on the poems, which users liked which poems (likes app) as well as which users follows which users (followers app.)
 
 ## Main Technologies
 Django Rest Framework
+
+### Features
+This API contains the following six apps. 
+
+1. poems<br>
+- Logged in users can enter the poem's title, content (required fields) and select a category (‘other’ by default),and the data will be handled by poems app.
+- The owner of the poem can edit or delete it.
+
+2. profiles<br>
+- A profile object will be automatically made when a user object is created.  This is done by def create_profile method in the models.py module.
+- Users can enter display name, an introduction about themselves, their favorite poems and poets and upload an image.
+
+3. comments<br>
+- Comments can be written, edited or deleted by logged in users.
+- Comment model has a foreign key poem which keeps track on which poem the comment has been written about.
+Only the owner of the comments can edit or delete the comments.
+
+4. likes<br>
+- ‘Like’ object will be created whenever a user likes a poem. 
+- 'unique_together' defined in the Meta class in the Like model makes sure that a user can’t like the poem twice.
+
+5. followers<br>
+- ‘Follower’ object will be created when a user follows a user.
+- 'unique_together' makes sure that a user can’t follow a user twice.
+
+**Other features**
+permissions class<br>
+- IsOwnerOrReadOnly will examine if the user is the owner of an object, and if so, returns true.  This prevents users other than the owner of the object from accessing the editing and deleting functionalities of the object.
+
+dj-rest-auth bug<br>
+Due to a bug in dj-rest-auth, users cannot log out.  The samesite attribute is set to “None” in settings.py, but this is not passed to the log out view.  As a solution to this bug, a method def logout_route is written in rest-framework_api/views.py.  This method sets both cookies to an empty string and pass additional attributes such as secure, httponly and samesite, which were left out by mistake by the library.
 
 ## Manual Testing
 
@@ -32,7 +60,10 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |2|'sunset.jpg' is set as default profile image. |--| Go to "/profiles" and check if the value of 'image' for user1 is "https://res.cloudinary.com/ds66fig3o/image/upload/v1/media/../sunset.jpg". | The correct URL is set for 'image' field. |The correct URL is set for 'image' field.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |3|profile edit if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
 |4|profile image can be updated. || Go to "/profiles/1" and upload 'test-profile.jpg' Click 'PUT.' |The image URL is updated and contains 'test-profile'. |The image URL is updated. The URL shows 'test-profile.jpg'. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/4-2.png)|2023/7/29|
-|5|Profile can't be updated by other users |Log out and log in as user1| Go to "/profiles/1" |The edit form is absent. |The edit form is absent. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/5.png)|2023/7/29|
+|5|file size validation||Upload ‘image-over-800KB.jpeg, which is 822KB in size.|A validation message will say "Files larger than 800KB can't be uploaded."| A validation message will say "Files larger than 800KB can't be uploaded."|pass|[image1 ](./images/manual-tests/DRF-profiles/5-1.png)[image2](./images/manual-tests/DRF-profiles/5-2.png)|2023/8/5|
+|6|file height validation||Upload ‘image-height-1280.jpg, whose height is 1280px .|A validation message will say "Images with height over 1000px can't be uploaded."|A validation message will say "Images with height over 1000px can't be uploaded."|pass|[image](./images/manual-tests/DRF-profiles/6.png)|2023/8/5|
+|7|file width validation||Upload ‘image-width-1300.jpg, whose width is 1300px .|A validation message will say "Images with width over 1000px can't be uploaded."| A validation message will say "Images with width over 1000px can't be uploaded."|pass|[image](./images/manual-tests/DRF-profiles/7.png)|2023/8/5|
+|8|Profile can't be updated by other users |Log out and log in as user1| Go to "/profiles/1" |The edit form is absent. |The edit form is absent. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/5.png)|2023/7/29|
 
 ### Poems
 
@@ -94,6 +125,10 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |4| like id is present if the user has liked the poem. | Log in as admin. Go to "/poems/8" |Check the like id | like_id has a value. |like id is 2.| pass|[image](./images/manual-tests/DRF-poems2/4.png)|2023/7/29|
 |5| like id is null if the user hasn't liked or has unliked the poem. | Log in as user1. Go to "/poems/8" |Check the like id | like_id is null. |like id is null.| pass|[image](./images/manual-tests/DRF-poems2/5.png)|2023/7/29|
 
+## Testing Code
+I checked all modules in the CI python linter at https://pep8ci.herokuapp.com
+All errors were cleared.
+
 ## Deployment Process
 
 1.	Create a database (I used ElephantSQL.)
@@ -145,3 +180,9 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 27.	Open the Deploy tab, select connect to Github.  Search for the repository and click ‘Connect.’
 28.	Click ‘Deploy’ at the bottom of the page.
 29.	If message ‘Your app was successfully deployed’ appears, click “View.”
+
+add docstrings
+
+
+### Credits:
+def logout_route in rest-framework_api/views.py 

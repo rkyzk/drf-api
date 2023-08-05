@@ -1,3 +1,6 @@
+"""This module holds views for listing/creating Comment objects
+and for editing/deleting Comment objects."""
+
 from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_api.permissions import IsOwnerOrReadOnly
@@ -24,6 +27,10 @@ class CommentList(generics.ListCreateAPIView):
     )
 
     def perform_create(self, serializer):
+        """
+        Set the current user as the owner
+        when a new object is created.
+        """
         serializer.save(owner=self.request.user)
 
 
