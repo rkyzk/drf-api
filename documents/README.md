@@ -7,10 +7,13 @@
 * [Manual Testing](#manual-testing)
 * [Testing Code](#testing-code)
 * [Deployment Process](#deployment-process)
+* [Credits](#credits)
 
 ## Overview
 This Django Rest Framework API serves as the backend for "Your Poetry" application -- a platform for sharing poetry.
 The API contains apps that handle data about poems, user profiles, comments on the poems as well as which users liked which poems (likes app) and which users follows which users (followers app.)
+
+The app can be found [here](https://poetry-6c31c94e3988.herokuapp.com/)
 
 ## Main Technologies
 Django Rest Framework
@@ -43,7 +46,7 @@ This API contains the following six apps.
 *permissions class*<br>
 - IsOwnerOrReadOnly will examine if the user is the owner of an object, and if so, returns true.  This will be used to programtaically prevent users other than the owner of the object from accessing the editing and deleting functionalities of the object.
 
-*dj-rest-auth bug*<br>
+*dj-rest-auth bug fix*<br>
 - Due to a bug in dj-rest-auth, users cannot log out.  The reason is that even though the samesite attribute is set to “None” in settings.py, this is not passed to the log out view.
 - As a solution to this bug, a method def logout_route is written in rest-framework_api/views.py (this was taken from the DRF walk through project at CI).  As explained in the lesson ‘dj-rest-auth bug fix’ at CI,
 this method sets both cookies to an empty string and pass additional attributes such as secure, httponly and samesite, which were left out by mistake by the library.
@@ -52,7 +55,7 @@ this method sets both cookies to an empty string and pass additional attributes 
 
 Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected results | Actual results | Pass/Fail |Image| Date |
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
-|1|message at root | Go to root URL "https://8000-rkyzk-drfapi-wi7vo0777d0.ws-us102.gitpod.io" | Check the displayed information | Message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass|[image](./images/manual-tests/DRF/1.png)|2023/4/30|
+|1|message at root | Go to root URL "https://poetry-6c31c94e3988.herokuapp.com" | Check the displayed information | Message "Welcome to my drf API!" is displayed. |message "Welcome to my drf API!" is displayed.| pass|[image](./images/manual-tests/DRF/1.png)|2023/8/8|
 
 ### Profiles
 
@@ -60,7 +63,7 @@ Test No.| Feature tested| Preparation Steps if any | Test Steps | Expected resul
 |:---| :--- | :--- |:---| :--- | :--- |:---| :--- |:--- |
 |1|A profile is automatically made for a new user.|Go to admin panel, add user (username:'user1' password: 'swUf8LcR'.)|Go to "/profiles" and check if User object 'user1' is created. |'user1' is created.|'user1' is created.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
 |2|'sunset.jpg' is set as default profile image. |--| Go to "/profiles" and check if the value of 'image' for user1 is "https://res.cloudinary.com/ds66fig3o/image/upload/v1/media/../sunset.jpg". | The correct URL is set for 'image' field. |The correct URL is set for 'image' field.| pass|[image](./images/manual-tests/DRF-profiles/1&2.png)|2023/7/29|
-|3|profile edit if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
+|3|profile can be edited if logged in and owner. |log in as admin| Go to "/profiles/1" (1 is admin's id) and update the data as follows: display name: admin display name; about me: Im admin; favorites: my favorites. Click 'PUT.' |The data are updated. |The data are updated.| pass|[image](./images/manual-tests/DRF-profiles/4.png)|2023/7/29|
 |4|profile image can be updated. || Go to "/profiles/1" and upload 'test-profile.jpg' Click 'PUT.' |The image URL is updated and contains 'test-profile'. |The image URL is updated. The URL shows 'test-profile.jpg'. | pass|[image1 ](./images/manual-tests/DRF-profiles/4-1.png)[image](./images/manual-tests/DRF-profiles/4-2.png)|2023/7/29|
 |5|file size validation||Upload ‘image-over-800KB.jpeg, which is 822KB in size.|A validation message will say "Files larger than 800KB can't be uploaded."| A validation message will say "Files larger than 800KB can't be uploaded."|pass|[image1 ](./images/manual-tests/DRF-profiles/5-1.png)[image2](./images/manual-tests/DRF-profiles/5-2.png)|2023/8/5|
 |6|file height validation||Upload ‘image-height-1280.jpg, whose height is 1280px .|A validation message will say "Images with height over 1000px can't be uploaded."|A validation message will say "Images with height over 1000px can't be uploaded."|pass|[image](./images/manual-tests/DRF-profiles/6.png)|2023/8/5|
@@ -143,7 +146,7 @@ All errors were cleared.
 `import dj_database_url`
 
 7.	update the DATABASES section to the following:<br>
-![image](./images/readme/deployment-1.png)
+<img src="./images/readme/deployment-1.png" alt="code snippets" width="600"/>
 
 8. In env.py write:
 `os.environ[‘DATABASE_URL’] = “write in database url”`
@@ -160,12 +163,12 @@ All errors were cleared.
 15.	In the installed apps section, add ‘corsheaders’ below ‘dj_rest_auth.registration’<br>
 16.	Add corsheaders middleware to the TOP of the MIDDLEWARE
 `'corsheaders.middleware.CorsMiddleware',`
-17.	Under the MIDDLEWARE list, set the ALLOWED_ORIGINS for the network requests made to the server with the following code:
-![image](./images/readme/2.png)
+17.	Under the MIDDLEWARE list, set the ALLOWED_ORIGINS for the network requests made to the server with the following code:<br>
+<img src="./images/readme/2.png" alt="code snippets" width="600"/>
 18.	In order to enable sending cookies in cross-origin requests so that users can get authentication functionality, add the follwoing:<br>
 `CORS_ALLOW_CREDENTIALS = True`
-19.	To be able to have the front end app and the API deployed to different platforms, set the JWT_AUTH_SAMESITE attribute to 'None'. (Without this the cookies would be blocked.)
-![image](./images/readme/3.png)
+19.	To be able to have the front end app and the API deployed to different platforms, set the JWT_AUTH_SAMESITE attribute to 'None'. (Without this the cookies would be blocked.)<br>
+<img src="./images/readme/3.png" alt="code snippets" width="600"/>
 20. Remove the value for SECRET_KEY and replace with the following code to use an environment variable instead.<br>
 `SECRET_KEY = os.environ.get('SECRET_KEY')`
 21.	Set a NEW value for the SECRET_KEY environment variable in env.py.<br>
@@ -185,9 +188,9 @@ All errors were cleared.
 
 ### Credits:
 
-I leaned Django Rest Framework with the walk through project at CI, and I imitated many aspects of the project.<br>
+I leaned Django Rest Framework with the walk through project at CI, and I incorporated many ideas from the project.<br>
 
-Specifically the following modules were taken from the walk through project with little or no modification. 
+Specifically the following modules and apps were taken from the walk through project with little or no modification. 
 - IsOwnerOrReadOnly class in permissions.py in rest_framework_api
 - CurrentUserSerializer class in serializers.py in rest_framework_api
 - def logout_route, def root_route in views.py in rest_framework_api
