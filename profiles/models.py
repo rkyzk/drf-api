@@ -17,7 +17,7 @@ class Profile(models.Model):
         upload_to='images/', default='../sunset.jpg'
     )
     featured_flag = models.BooleanField(default=False)
-
+    
     class Meta:
         """Define options for how the profiles will be ordered."""
         ordering = ['-created_at']
